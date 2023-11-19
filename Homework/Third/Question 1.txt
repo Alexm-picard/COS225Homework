@@ -1,0 +1,1 @@
+1. Since big-O notation is the asymptotic upper bound, it can be proven by placing an arbitrarily large value in for n and finding which term dominates the equation. If n is replaced with a value of lets say 1,000,000 it is shown that the squared term dominates, therefore the upper limit is determined by the n^2.
