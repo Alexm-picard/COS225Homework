@@ -1,46 +1,55 @@
 import java.util.NoSuchElementException;
 
-public class SinglyLinkedList<E> implements Iterable{
-	private SinglyLinkedListNode<E> head;
-    private SinglyLinkedListNode<E> tail;
+public class DoublyLinkedList<E> implements Iterable{
+	private DoublyLinkedListNode<E> head;
+    private DoublyLinkedListNode<E> tail;
     private int size;
 
-    public SinglyLinkedList() {
+    public DoublyLinkedList() {
         head = null;
         tail = null;
         size = 0;
     }
     
-    public SinglyLinkedListNode<E> getHead() { return head; }
+    public DoublyLinkedListNode<E> getHead() { return head; }
     
-    public SinglyLinkedListNode<E> getTail() { return tail; }
+    public DoublyLinkedListNode<E> getTail() { return tail; }
     
     public int size() {
         return size;
     }
 
     public void addToHead(E new_data) {
-        SinglyLinkedListNode<E> new_head = new SinglyLinkedListNode<E>(new_data);
+        DoublyLinkedListNode<E> new_head = new DoublyLinkedListNode<E>(new_data);
+        DoublyLinkedListNode<E> new_prev = new DoublyLinkedListNode<E>(new_data);
         new_head.setNext(head);
+        new_prev.setPrev(prev);
         head = new_head;
-        if (tail == null) { tail = new_head; }
+        prev = new_prev;
+        if (tail == null) { 
+            tail = new_head; 
+            prev = null;
+        }
         size = size + 1;
     }
     
     public void addToTail(E new_data) {
-    	SinglyLinkedListNode<E> new_tail = new SinglyLinkedListNode<E>(new_data);
+    	DoublyLinkedListNode<E> new_tail = new DoublyLinkedListNode<E>(new_data);
+        DoublyLinkedListNode<E> new_prev = new DoublyLinkedListNode<E>(new_data);
     	if (tail != null) {
     		tail.setNext(new_tail);
     		tail = new_tail;
+            prev = new_prev;
     	} else {
     		tail = new_tail;
     		head = new_tail;
+            prev = null;
     	}
     	size = size + 1;
     }
 
     public E get(int index) {
-    	SinglyLinkedListNode<E> current_node = head;
+    	DoublyLinkedListNode<E> current_node = head;
     	int current_index = 0;
         if ((index >= 0) && (index < size)) {
             while (current_index < index) {
@@ -53,7 +62,7 @@ public class SinglyLinkedList<E> implements Iterable{
     }
 
     public void set(int index, E new_data) {
-    	SinglyLinkedListNode<E> current_node = head;
+    	DoublyLinkedListNode<E> current_node = head;
         int current_index = 0;
         if ((index >= 0) && (index < size)) {
             while (current_index < index) {
@@ -67,7 +76,7 @@ public class SinglyLinkedList<E> implements Iterable{
     }
 
     public int search(E data) {
-        SinglyLinkedListNode<E> current_node = head;
+        DoublyLinkedListNode<E> current_node = head;
         int current_index = 0;
         while (current_node != null) {
             if (data.equals(current_node.getData())) {
@@ -80,7 +89,7 @@ public class SinglyLinkedList<E> implements Iterable{
     }
     
     public E removeHead() {
-        SinglyLinkedListNode<E> node;
+        DoublyLinkedListNode<E> node;
         if (head == null) {
             throw new java.util.NoSuchElementException("No such element available");
         }
@@ -92,7 +101,7 @@ public class SinglyLinkedList<E> implements Iterable{
     }
 
     public E removeTail() {
-        SinglyLinkedListNode<E> node = head;
+        DoublyLinkedListNode<E> node = head;
         E data;
         if (head == null) {
             throw new java.util.NoSuchElementException("No such element available");

@@ -16,9 +16,10 @@ public class CircularQueue<E> implements Queue<E> {
     }
 
     public void enqueue(E element) {
+
         if (((this.front == 0) && (this.rear == this.data.length - 1)) ||
             (this.rear == this.front - 1))  {
-            System.out.println("Circular queue at capacity; unable to enqueue");
+            resize();
         } else if (this.front == -1) {
             this.data[0] = element;
             this.front = this.rear = 0;
@@ -68,5 +69,17 @@ public class CircularQueue<E> implements Queue<E> {
             return this.data.length - (this.front - this.rear - 1);
         }
         return this.rear - this.front + 1;
+    }
+    private void resize(){
+        int size = size() * 2;
+        tempData = (E[]) new Object[size];
+        int j = 0;
+        for(int i = this.front; i != this.rear; i++){
+            if(i == size()){
+                i = 0;
+            }
+            tempData[j] = this.Data[i];
+        }
+        this.Data = tempData;
     }
 }
