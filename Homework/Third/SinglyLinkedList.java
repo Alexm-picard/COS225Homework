@@ -1,6 +1,6 @@
 import java.util.NoSuchElementException;
-
-public class SinglyLinkedList<E> implements Iterable{
+import  java.util.Iterator;
+public class SinglyLinkedList<E> implements Iterable<E>{
 	private SinglyLinkedListNode<E> head;
     private SinglyLinkedListNode<E> tail;
     private int size;
@@ -126,18 +126,18 @@ public class SinglyLinkedList<E> implements Iterable{
         }
     }
     //If removing head or tail index O(1) time complexity else O(n)
-    public void remove(int index, E new_data){
+    public void remove(int index){
         if(size == 0){
-            removeHead(new_data);
+            removeHead();
         }
         if(index == size){
-            removeTail(new_data);
+            removeTail();
         }
         else{
             for(int i = 0; i < index; i++){
                 head = head.getNext();
             }
-            removeHead(new_data);
+            removeHead();
         }
     }
     public boolean hasNext() { 
@@ -147,11 +147,12 @@ public class SinglyLinkedList<E> implements Iterable{
         else{
             return true;
         }
-    public E next() {
+    }
+    /* public E next() {
         if (!hasNext()) { throw new NoSuchElementException("No next element available"); }
         head = head.getNext();
         return head;
-    }
+    } */
     @Override
-    public Iterator<E> iterator() { return new SinglyLinkedList<E>(this);}
+    public Iterator<E> iterator() { return new SinglyLinkedList<E>();}
 }

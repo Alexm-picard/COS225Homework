@@ -1,6 +1,6 @@
 import java.util.NoSuchElementException;
-
-public class DoublyLinkedList<E> implements Iterable{
+import  java.util.Iterator;
+public class DoublyLinkedList<E> implements Iterable<E>{
 	private DoublyLinkedListNode<E> head;
     private DoublyLinkedListNode<E> tail;
     private int size;
@@ -18,32 +18,28 @@ public class DoublyLinkedList<E> implements Iterable{
     public int size() {
         return size;
     }
-
+    public boolean isEmpty(){
+        return size == -1;
+    }
     public void addToHead(E new_data) {
         DoublyLinkedListNode<E> new_head = new DoublyLinkedListNode<E>(new_data);
-        DoublyLinkedListNode<E> new_prev = new DoublyLinkedListNode<E>(new_data);
         new_head.setNext(head);
-        new_prev.setPrev(prev);
         head = new_head;
-        prev = new_prev;
         if (tail == null) { 
             tail = new_head; 
-            prev = null;
         }
         size = size + 1;
     }
     
     public void addToTail(E new_data) {
     	DoublyLinkedListNode<E> new_tail = new DoublyLinkedListNode<E>(new_data);
-        DoublyLinkedListNode<E> new_prev = new DoublyLinkedListNode<E>(new_data);
     	if (tail != null) {
+            tail.setPrev(tail);
     		tail.setNext(new_tail);
     		tail = new_tail;
-            prev = new_prev;
     	} else {
     		tail = new_tail;
     		head = new_tail;
-            prev = null;
     	}
     	size = size + 1;
     }
@@ -135,32 +131,20 @@ public class DoublyLinkedList<E> implements Iterable{
         }
     }
     //If removing head or tail index O(1) time complexity else O(n)
-    public void remove(int index, E new_data){
-        if(size == 0){
-            removeHead(new_data);
+    public void remove(int index){
+        if(index == 0){
+            removeHead();
         }
         if(index == size){
-            removeTail(new_data);
+            removeTail();
         }
         else{
             for(int i = 0; i < index; i++){
                 head = head.getNext();
             }
-            removeHead(new_data);
+            removeHead();
         }
-    }
-    public boolean hasNext() { 
-        if(head == tail){
-            return false;
-        }
-        else{
-            return true;
-        }
-    public E next() {
-        if (!hasNext()) { throw new NoSuchElementException("No next element available"); }
-        head = head.getNext();
-        return head;
     }
     @Override
-    public Iterator<E> iterator() { return new SinglyLinkedList<E>(this);}
+    public Iterator<E> iterator() { return new DoublyLinkedList<E>();}
 }
