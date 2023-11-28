@@ -8,6 +8,10 @@ public class DoublyLinkedListNode<E> {
         next = null;
         prev = null;
     }
+    public DoublyLinkedListNode() {
+        next = null;
+        prev = null;
+    }
     public E getData() { return data; }
     public DoublyLinkedListNode<E> getNext() { return next; }
     public DoublyLinkedListNode<E> getPrev() { return prev; }

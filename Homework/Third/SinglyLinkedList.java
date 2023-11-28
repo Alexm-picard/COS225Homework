@@ -141,18 +141,23 @@ public class SinglyLinkedList<E> implements Iterable<E>{
         }
     }
     public boolean hasNext() { 
-        if(head == tail){
-            return false;
-        }
-        else{
-            return true;
-        }
+        return head != tail;
     }
     /* public E next() {
         if (!hasNext()) { throw new NoSuchElementException("No next element available"); }
         head = head.getNext();
         return head;
     } */
+    public class MySinglyLinkedListIterator implements Iterator<E> {
+        SinglyLinkedListNode<E> new_head = new SinglyLinkedListNode<E>();
+        public MySinglyLinkedListIterator() { head = new_head; }
+        public boolean hasNext() { return head.getNext() != null; }
+        public E next() {
+        if (!hasNext()) { throw new NoSuchElementException("No next element available"); }
+        head = head.getNext();
+        return head.getData();
+        }
+    }
     @Override
-    public Iterator<E> iterator() { return new SinglyLinkedList<E>();}
+    public Iterator<E> iterator() { return new MySinglyLinkedListIterator();}
 }

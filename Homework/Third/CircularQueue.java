@@ -72,14 +72,14 @@ public class CircularQueue<E> implements Queue<E> {
     }
     private void resize(){
         int size = size() * 2;
-        tempData = (E[]) new Object[size];
+        E[] tempData = (E[]) new Object[size];
         int j = 0;
         for(int i = this.front; i != this.rear; i++){
             if(i == size()){
                 i = 0;
             }
-            tempData[j] = this.Data[i];
+            tempData[j] = this.data[i];
         }
-        this.Data = tempData;
+        this.data = tempData;
     }
 }

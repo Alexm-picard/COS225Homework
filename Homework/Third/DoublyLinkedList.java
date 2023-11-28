@@ -19,7 +19,7 @@ public class DoublyLinkedList<E> implements Iterable<E>{
         return size;
     }
     public boolean isEmpty(){
-        return size == -1;
+        return this.head == null;
     }
     public void addToHead(E new_data) {
         DoublyLinkedListNode<E> new_head = new DoublyLinkedListNode<E>(new_data);
@@ -90,9 +90,8 @@ public class DoublyLinkedList<E> implements Iterable<E>{
             throw new java.util.NoSuchElementException("No such element available");
         }
         node = head;
-        head = head.getNext();
-        size = size - 1;
-        if (head == null) { tail = null; }
+        this.head = head.getNext();
+        this.size = size - 1;
         return node.getData();
     }
 
@@ -145,6 +144,16 @@ public class DoublyLinkedList<E> implements Iterable<E>{
             removeHead();
         }
     }
+    public class MyDoublyLinkedListIterator implements Iterator<E> {
+        DoublyLinkedListNode<E> new_head = new DoublyLinkedListNode<E>();
+        public MyDoublyLinkedListIterator() { head = new_head; }
+        public boolean hasNext() { return head.getNext() != tail; }
+        public E next() {
+        if (!hasNext()) { throw new NoSuchElementException("No next element available"); }
+        head = head.getNext();
+        return head.getData();
+        }
+    }
     @Override
-    public Iterator<E> iterator() { return new DoublyLinkedList<E>();}
+    public Iterator<E> iterator() { return new MyDoublyLinkedListIterator();}
 }
