@@ -102,6 +102,7 @@ public class MyArrayList<E> implements Iterable<E> {
             next_index = next_index + 1;
             return next_element;
         }
+    }
     //Insert method shifts the data then inserts the element at the index
     //Time complexity is O(n)
     public void insert(int index, E element){
@@ -125,5 +126,4 @@ public class MyArrayList<E> implements Iterable<E> {
 	public Iterator<E> iterator() {
 		return new MyArrayListIterator();
 	}
-
 }

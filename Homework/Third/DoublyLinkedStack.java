@@ -1,25 +1,21 @@
-public class DoublyLinkedStack<E> implements Stack<E> {
-    private DoublyLinkedListNode<E> data;
+public class DoublyLinkedStack<E> extends DoublyLinkedList<E> implements Stack<E> {
+    private DoublyLinkedList<E> data;
     private int size;
     public void push(E element){
-        DoublyLinkedListNode<E> node = new DoublyLinkedListNode<E>();
-        
-        addToHead(node);
+        this.data.addToHead(element);
+        this.size += 1;
     }
     public E pop(){
-        DoublyLinkedListNode<E> node = new DoublyLinkedListNode<E>();
-        node = removeHead();
-        return node;
+        this.size -= 1;
+        return this.data.removeHead();
     }
     public E peek(){
-        DoublyLinkedListNode<E> node = new DoublyLinkedListNode<E>();
-        node = getHead();
-        return node;
+        return this.data.getHead().getData();
     }
     public boolean isEmpty(){
-        return isEmpty();
+        return this.data.isEmpty();
     }
     public int size(){
-        return size();
+        return this.data.size();
     }
 }
