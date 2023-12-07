@@ -1,4 +1,4 @@
-
+import java.lang.Math;
 public class BinaryTree<E> {
     private BinaryTreeNode<E> root;
     
@@ -67,7 +67,7 @@ public class BinaryTree<E> {
 
     public void breadthFirstPrint() {
     	if (root == null) { return; }
-        SinglyLinkedListQueue<BinaryTreeNode<E>> q = new SinglyLinkedListQueue<>();
+        SinglyLinkedQueue<BinaryTreeNode<E>> q = new SinglyLinkedQueue<>();
         q.enqueue(root);
         BinaryTreeNode<E> current_node;
         while (!q.isEmpty()) {
@@ -120,5 +120,94 @@ public class BinaryTree<E> {
     		return 0;
     	}
     	return 1 + sizeOfSubtree(root.getLeft()) + sizeOfSubtree(root.getRight());
+    }
+    public int height(){
+        return heightOfSubTree(root);
+    }
+    //Time complexity is O(n) due to linear recurssion
+    private int heightOfSubTree(BinaryTreeNode<E> node) {
+    	if (root == null) {
+    		return 0;
+    	}
+        if(heightOfSubTree(root.getLeft()) > heightOfSubTree(root.getRight())){
+    	    return 1 + heightOfSubTree(root.getLeft());
+        }else{
+            return 1 + heightOfSubTree(root.getRight());
+        }
+    }
+    public boolean isBalanced(){
+        if(isBalancedRecursive(root) == -1){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    //isBalancedReccursive implemented in O(n)
+    private int isBalancedRecursive(BinaryTreeNode<E> node) {
+    	if (root == null) {
+    		return 0;
+    	}
+        int left = isBalancedRecursive(root.getLeft());
+        if(left == -1){
+            return -1;
+        }
+        int right = isBalancedRecursive(root.getRight());
+        if(right == -1){
+            return -1;
+        }
+        if(Math.abs(left - right) >= 1){
+            return -1;
+        }else{
+            return Math.max(left, right) + 1;
+        }
+    }
+    //Time complexity is O(n^2) due to the two different reccursion calls
+    //Only made sence when adding BinaryTreeNode<E> node into arguments
+    //or else how would it know which branch to insert into
+    public void insertIntoShorterSubtree(E new_data, BinaryTreeNode<E> node){
+        BinaryTreeNode<E> temp = new BinaryTreeNode<>(new_data);
+        if(root == null){
+            root.setData(new_data);
+        }
+        if(root.getLeft() == null){
+            root.setLeft(temp);
+        }
+        if(root.getRight() == null){
+            root.setRight(temp);
+        }
+        if(heightOfSubTree(root.getLeft()) >= heightOfSubTree(root.getRight())){
+            insertIntoShorterSubtree(new_data, root.getLeft());
+        }else{
+            insertIntoShorterSubtree(new_data, root.getRight());
+        }
+    }
+    //Time complexity is log_2(n) due to the worst case being a nearly complete binary tree
+    public void insertIntoFirstAvailablePosition(E new_data){
+        BinaryTreeNode<E> temp = new BinaryTreeNode<>(new_data);
+        SinglyLinkedQueue<BinaryTreeNode<E>> q = new SinglyLinkedQueue<>();
+        BinaryTreeNode<E> current_node;
+        if(root == null){
+            root.setData(new_data);
+        }
+        if(root.getLeft() == null){
+            root.setLeft(temp);
+        }
+        if(root.getRight() == null){
+            root.setRight(temp);
+        }
+        q.enqueue(root);
+        while (!q.isEmpty()) {
+            current_node = q.dequeue();
+            if (current_node.getLeft() != null) { 
+                q.enqueue(current_node.getLeft()); 
+            }else{
+                current_node.setLeft(temp);
+            }
+            if (current_node.getRight() != null) {
+                 q.enqueue(current_node.getRight()); 
+            }else{
+                current_node.setRight(temp);
+            }
+        }
     }
 }
