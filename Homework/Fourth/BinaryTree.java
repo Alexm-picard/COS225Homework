@@ -210,4 +210,24 @@ public class BinaryTree<E> {
             }
         }
     }
+    //The time complexity is O(n) as the worst time is if the BinaryTree
+    private void toStringRecursive(BinaryTreeNode<E> node){
+        SinglyLinkedQueue<BinaryTreeNode<E>> q = new SinglyLinkedQueue<>();
+        if (node == null) { System.out.print("No Binary Tree Nodes"); }
+        for(int i = 0; i < q.size()*4; i++){
+            System.out.print(" ");
+        }
+        System.out.print("(" +  q.size() + ")");
+        System.out.println(node.getData());
+        q.enqueue(node);
+        preorderPrintRecursive(node.getLeft());
+        preorderPrintRecursive(node.getRight());
+    }
+    @Override
+    public String toString(){
+        toStringRecursive(root);
+        System.out.println();
+        return "Complete";
+    }
+    
 }
