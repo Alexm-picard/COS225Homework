@@ -223,6 +223,48 @@ public class BinaryTree<E> {
         preorderPrintRecursive(node.getLeft());
         preorderPrintRecursive(node.getRight());
     }
+    public void deleteByPromotingInorderPredecessor(E data){
+        deleteRecursiveByPromotingInorderPredecessor(data, root);
+    }
+    private BinaryTreeNode<E> deleteRecursiveByPromotingInorderPredecessor(E data, BinaryTreeNode<E> node){
+        BinaryTreeNode<E> current, preorder_successor;
+        if (node == null) { 
+            return null; 
+        }
+        node.setLeft(deleteRecursiveByPromotingInorderPredecessor(data, node.getLeft()));
+        node.setRight(deleteRecursiveByPromotingInorderPredecessor(data, node.getRight()));
+        if (data.equals(node.getData())) {
+            if (node.getLeft() == null) { 
+                return node.getRight(); 
+            }
+            if (node.getRight() == null) { 
+                return node.getLeft(); 
+            }
+            if (node.getRight().getLeft() == null) {
+                node.getRight().setLeft(node.getLeft());
+                return node.getRight();
+            }
+        current = node.getRight();
+        while (current.getLeft().getLeft() != null) { 
+            current = current.getLeft(); 
+        }
+        preorder_successor = current.getLeft();
+        current.setLeft(preorder_successor.getRight());
+        preorder_successor.setLeft(node.getLeft());
+        preorder_successor.setRight(node.getRight());
+        return preorder_successor;
+        }
+    }
+    public boolean isBinarySearchTree(){
+        BinaryTreeNode<E> temp = root;
+        return isBinarySearchTreeR(temp);
+    }
+    private boolean isBinarySearchTreeR(BinaryTreeNode<E> node){
+        if(node == null){
+            
+        }
+    }
+
     @Override
     public String toString(){
         toStringRecursive(root);

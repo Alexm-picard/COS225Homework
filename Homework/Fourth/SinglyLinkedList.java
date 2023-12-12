@@ -112,6 +112,8 @@ public class SinglyLinkedList<E> implements Iterable<E>{
     }
     //If inserting head or tail index O(1) time complexity else O(n)
     public void insert(int index, E new_data){
+        SinglyLinkedListNode<E> newNode = new SinglyLinkedListNode<E>(new_data);
+        SinglyLinkedListNode<E> current = head;
         if(size == 0){
             addToHead(new_data);
         }
@@ -120,13 +122,16 @@ public class SinglyLinkedList<E> implements Iterable<E>{
         }
         else{
             for(int i = 0; i < index; i++){
-                head = head.getNext();
+                current = current.getNext();
             }
-            addToHead(new_data);
+            newNode.setNext(current.getNext());
+            current.setNext(newNode);
+            size++;
         }
     }
     //If removing head or tail index O(1) time complexity else O(n)
     public void remove(int index){
+        SinglyLinkedListNode<E> current = head;
         if(size == 0){
             removeHead();
         }
@@ -134,10 +139,10 @@ public class SinglyLinkedList<E> implements Iterable<E>{
             removeTail();
         }
         else{
-            for(int i = 0; i < index; i++){
-                head = head.getNext();
+            for(int i = 0; i < index-1; i++){
+                current = current.getNext();
             }
-            removeHead();
+            current.setNext(current.getNext().getNext());
         }
     }
     public boolean hasNext() { 
@@ -146,11 +151,6 @@ public class SinglyLinkedList<E> implements Iterable<E>{
     public boolean isEmpty(){
         return size == 0;
     }
-    /* public E next() {
-        if (!hasNext()) { throw new NoSuchElementException("No next element available"); }
-        head = head.getNext();
-        return head;
-    } */
     public class MySinglyLinkedListIterator implements Iterator<E> {
         SinglyLinkedListNode<E> new_head = new SinglyLinkedListNode<E>();
         public MySinglyLinkedListIterator() { head = new_head; }
