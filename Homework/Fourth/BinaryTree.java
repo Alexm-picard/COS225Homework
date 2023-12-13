@@ -1,7 +1,7 @@
 import java.lang.Math;
-public class BinaryTree<E extends Comparable<E>> {
+import java.util.Comparator;
+public class BinaryTree<E> implements Comparator<E> {
     private BinaryTreeNode<E> root;
-    
     public BinaryTree() {
         root = null;
     }
@@ -126,13 +126,16 @@ public class BinaryTree<E extends Comparable<E>> {
     }
     //Time complexity is O(n) due to linear recurssion
     private int heightOfSubTree(BinaryTreeNode<E> node) {
-    	if (root == null) {
+    	if(this.isEmpty()){
+            return -1;
+        }
+        if (node == null) {
     		return 0;
     	}
-        if(heightOfSubTree(root.getLeft()) > heightOfSubTree(root.getRight())){
-    	    return 1 + heightOfSubTree(root.getLeft());
+        if(heightOfSubTree(node.getLeft()) >= heightOfSubTree(node.getRight())){
+    	    return 1 + heightOfSubTree(node.getLeft());
         }else{
-            return 1 + heightOfSubTree(root.getRight());
+            return 1 + heightOfSubTree(node.getRight());
         }
     }
     public boolean isBalanced(){
@@ -144,85 +147,86 @@ public class BinaryTree<E extends Comparable<E>> {
     }
     //isBalancedReccursive implemented in O(n)
     private int isBalancedRecursive(BinaryTreeNode<E> node) {
-    	if (root == null) {
-    		return 0;
-    	}
-        int left = isBalancedRecursive(root.getLeft());
-        if(left == -1){
+        if (node == null) {
+            return 0;
+        }
+    
+        int left = isBalancedRecursive(node.getLeft());
+        if (left == -1) {
             return -1;
         }
-        int right = isBalancedRecursive(root.getRight());
-        if(right == -1){
+    
+        int right = isBalancedRecursive(node.getRight());
+        if (right == -1) {
             return -1;
         }
-        if(Math.abs(left - right) >= 1){
+    
+        if (Math.abs(left - right) > 1) {
             return -1;
-        }else{
+        } else {
             return Math.max(left, right) + 1;
         }
     }
-    //Time complexity is O(n^2) due to the two different reccursion calls
+    
+    //Time complexity is O(n) due to worst case being a linked list
     //Only made sence when adding BinaryTreeNode<E> node into arguments
     //or else how would it know which branch to insert into
     public void insertIntoShorterSubtree(E new_data, BinaryTreeNode<E> node){
-        BinaryTreeNode<E> temp = new BinaryTreeNode<>(new_data);
         if(root == null){
-            root.setData(new_data);
+            root = new BinaryTreeNode<>(new_data);
+            return;
         }
-        if(root.getLeft() == null){
-            root.setLeft(temp);
+        if(node.getLeft() == null){
+            node.setLeft(new BinaryTreeNode<>(new_data));
+            return;
         }
-        if(root.getRight() == null){
-            root.setRight(temp);
+        if(node.getRight() == null){
+            node.setRight(new BinaryTreeNode<>(new_data));
+            return;
         }
-        if(heightOfSubTree(root.getLeft()) >= heightOfSubTree(root.getRight())){
-            insertIntoShorterSubtree(new_data, root.getLeft());
-        }else{
-            insertIntoShorterSubtree(new_data, root.getRight());
+        int leftHeight = heightOfSubTree(node.getLeft());
+        int rightHeight = heightOfSubTree(node.getRight());
+
+        if (leftHeight <= rightHeight) {
+        // If left subtree is shorter or equal, go down the left subtree
+            insertIntoShorterSubtree(new_data, node.getLeft());
+        } else {
+        // If right subtree is shorter, go down the right subtree
+            insertIntoShorterSubtree(new_data, node.getRight());
         }
     }
-    //Time complexity is log_2(n) due to the worst case being a nearly complete binary tree
-    public void insertIntoFirstAvailablePosition(E new_data){
+    //Time complexity is O(n) due to the worst case being a nearly complete binary tree and 
+    //needs to go through each node in breadth first order
+    public void insertIntoFirstAvailablePosition(E new_data) {
         BinaryTreeNode<E> temp = new BinaryTreeNode<>(new_data);
         SinglyLinkedQueue<BinaryTreeNode<E>> q = new SinglyLinkedQueue<>();
-        BinaryTreeNode<E> current_node;
-        if(root == null){
-            root.setData(new_data);
+        
+        if (root == null) {
+            root = temp; // Set the new node as the root if the tree is empty
+            return;
         }
-        if(root.getLeft() == null){
-            root.setLeft(temp);
-        }
-        if(root.getRight() == null){
-            root.setRight(temp);
-        }
+    
         q.enqueue(root);
         while (!q.isEmpty()) {
-            current_node = q.dequeue();
-            if (current_node.getLeft() != null) { 
-                q.enqueue(current_node.getLeft()); 
-            }else{
+            BinaryTreeNode<E> current_node = q.dequeue();
+            
+            if (current_node.getLeft() == null) {
                 current_node.setLeft(temp);
+                return; // Inserted into the first available position, exit the method
+            } else {
+                q.enqueue(current_node.getLeft());
             }
-            if (current_node.getRight() != null) {
-                 q.enqueue(current_node.getRight()); 
-            }else{
+            
+            if (current_node.getRight() == null) {
                 current_node.setRight(temp);
+                return; // Inserted into the first available position, exit the method
+            } else {
+                q.enqueue(current_node.getRight());
             }
         }
     }
-    //The time complexity is O(n) as the worst time is if the BinaryTree
-    private void toStringRecursive(BinaryTreeNode<E> node){
-        SinglyLinkedQueue<BinaryTreeNode<E>> q = new SinglyLinkedQueue<>();
-        if (node == null) { System.out.print("No Binary Tree Nodes"); }
-        for(int i = 0; i < q.size()*4; i++){
-            System.out.print(" ");
-        }
-        System.out.print("(" +  q.size() + ")");
-        System.out.println(node.getData());
-        q.enqueue(node);
-        preorderPrintRecursive(node.getLeft());
-        preorderPrintRecursive(node.getRight());
-    }
+    
+    //Time complexity is O(n) as worst case is a unbalanced tree
     public void deleteByPromotingInorderPredecessor(E data) {
         root = deleteRecursiveByPromotingInorderPredecessor(data, root);
     }
@@ -254,19 +258,22 @@ public class BinaryTree<E extends Comparable<E>> {
     public boolean isBinarySearchTree() {
         return isBinarySearchTree(root, null, null);
     }
-
     private boolean isBinarySearchTree(BinaryTreeNode<E> node, E min, E max) {
         if (node == null) {
             return true;
         }
-        if ((min != null && node.getData().compareTo(min) <= 0) ||
-            (max != null && node.getData().compareTo(max) >= 0)) {
+        // Check if the current node's value is within the specified range
+        if ((min != null && compare(min, node.getData()) <= 0) ||
+            (max != null && compare(max, node.getData()) >= 0)) {
             return false;
         }
-
+    
+        // Recursively check left subtree with updated max value
+        // Recursively check right subtree with updated min value
         return isBinarySearchTree(node.getLeft(), min, node.getData()) &&
                isBinarySearchTree(node.getRight(), node.getData(), max);
     }
+    
     private BinaryTreeNode<E> findInorderPredecessor(BinaryTreeNode<E> node) {
         BinaryTreeNode<E> current = node;
         while (current.getRight() != null) {
@@ -275,12 +282,49 @@ public class BinaryTree<E extends Comparable<E>> {
         return current;
     }
 
+
+    //Time complexity is O(n) due to travirsing the string and the worst case being
+    // a linked list
     @Override
     public String toString(){
-        System.out.println("test");
-        toStringRecursive(root);
-        System.out.println();
-        return "Complete";
+        StringBuilder result = new StringBuilder();
+        toStringR(root, 0, result);
+        
+        return result.toString();
     }
-    
+    private void toStringR(BinaryTreeNode<E> root, int depth, StringBuilder result){
+        if (root == null) {
+            return;
+        }
+
+        for(int i = 0; i < (depth); i++){
+            result.append("    ");
+        }
+        result.append("(").append(depth).append(")").append(root.getData()).append("\n");
+        if (root.getLeft() != null || root.getRight() != null) {
+            if (root.getLeft() == null) {
+                for(int i = 0; i < (depth+1); i++){
+                    result.append("    ");
+                }
+                result.append("(").append(depth+1).append(")").append("null\n");
+            } else {
+                toStringR(root.getLeft(), depth + 1, result);
+            }
+
+            if (root.getRight() == null) {
+                for(int i = 0; i < (depth+1); i++){
+                    result.append("    ");
+                }
+                result.append("(").append(depth+1).append(")").append("null\n");
+            } else {
+                toStringR(root.getRight(), depth + 1, result);
+            }
+        }
+        
+        
+    }
+    @Override
+    public int compare(E num1, E num2) {
+        return ((Integer) num1).compareTo((Integer) num2);
+    }
 }
