@@ -1,5 +1,5 @@
 import java.lang.Math;
-public class BinaryTree<E> {
+public class BinaryTree<E extends Comparable<E>> {
     private BinaryTreeNode<E> root;
     
     public BinaryTree() {
@@ -223,50 +223,61 @@ public class BinaryTree<E> {
         preorderPrintRecursive(node.getLeft());
         preorderPrintRecursive(node.getRight());
     }
-    public void deleteByPromotingInorderPredecessor(E data){
-        deleteRecursiveByPromotingInorderPredecessor(data, root);
+    public void deleteByPromotingInorderPredecessor(E data) {
+        root = deleteRecursiveByPromotingInorderPredecessor(data, root);
     }
-    private BinaryTreeNode<E> deleteRecursiveByPromotingInorderPredecessor(E data, BinaryTreeNode<E> node){
-        BinaryTreeNode<E> current, preorder_successor;
-        if (node == null) { 
-            return null; 
+
+    private BinaryTreeNode<E> deleteRecursiveByPromotingInorderPredecessor(E data, BinaryTreeNode<E> node) {
+        if (node == null) {
+            return null;
         }
+
         node.setLeft(deleteRecursiveByPromotingInorderPredecessor(data, node.getLeft()));
         node.setRight(deleteRecursiveByPromotingInorderPredecessor(data, node.getRight()));
+
         if (data.equals(node.getData())) {
-            if (node.getLeft() == null) { 
-                return node.getRight(); 
-            }
-            if (node.getRight() == null) { 
-                return node.getLeft(); 
-            }
-            if (node.getRight().getLeft() == null) {
-                node.getRight().setLeft(node.getLeft());
+            if (node.getLeft() != null && node.getRight() != null) {
+                BinaryTreeNode<E> predecessor = findInorderPredecessor(node.getLeft());
+                node.setData(predecessor.getData());
+                node.setLeft(deleteRecursiveByPromotingInorderPredecessor(predecessor.getData(), node.getLeft()));
+            } else if (node.getLeft() != null) {
+                return node.getLeft();
+            } else if (node.getRight() != null) {
                 return node.getRight();
+            } else {
+                return null;
             }
-        current = node.getRight();
-        while (current.getLeft().getLeft() != null) { 
-            current = current.getLeft(); 
         }
-        preorder_successor = current.getLeft();
-        current.setLeft(preorder_successor.getRight());
-        preorder_successor.setLeft(node.getLeft());
-        preorder_successor.setRight(node.getRight());
-        return preorder_successor;
-        }
+        return node;
     }
-    public boolean isBinarySearchTree(){
-        BinaryTreeNode<E> temp = root;
-        return isBinarySearchTreeR(temp);
+    //The Time complexity is O(n) as it only needs to traverse the tree once to validate if it is a BST
+    public boolean isBinarySearchTree() {
+        return isBinarySearchTree(root, null, null);
     }
-    private boolean isBinarySearchTreeR(BinaryTreeNode<E> node){
-        if(node == null){
-            
+
+    private boolean isBinarySearchTree(BinaryTreeNode<E> node, E min, E max) {
+        if (node == null) {
+            return true;
         }
+        if ((min != null && node.getData().compareTo(min) <= 0) ||
+            (max != null && node.getData().compareTo(max) >= 0)) {
+            return false;
+        }
+
+        return isBinarySearchTree(node.getLeft(), min, node.getData()) &&
+               isBinarySearchTree(node.getRight(), node.getData(), max);
+    }
+    private BinaryTreeNode<E> findInorderPredecessor(BinaryTreeNode<E> node) {
+        BinaryTreeNode<E> current = node;
+        while (current.getRight() != null) {
+            current = current.getRight();
+        }
+        return current;
     }
 
     @Override
     public String toString(){
+        System.out.println("test");
         toStringRecursive(root);
         System.out.println();
         return "Complete";
