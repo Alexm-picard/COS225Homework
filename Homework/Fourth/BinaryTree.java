@@ -125,6 +125,7 @@ public class BinaryTree<E> implements Comparator<E> {
         return heightOfSubTree(root);
     }
     //Time complexity is O(n) due to linear recurssion
+    //Alex Picard
     private int heightOfSubTree(BinaryTreeNode<E> node) {
     	if(this.isEmpty()){
             return -1;
@@ -146,6 +147,7 @@ public class BinaryTree<E> implements Comparator<E> {
         }
     }
     //isBalancedReccursive implemented in O(n)
+    //Alex Picard
     private int isBalancedRecursive(BinaryTreeNode<E> node) {
         if (node == null) {
             return 0;
@@ -171,6 +173,7 @@ public class BinaryTree<E> implements Comparator<E> {
     //Time complexity is O(n) due to worst case being a linked list
     //Only made sence when adding BinaryTreeNode<E> node into arguments
     //or else how would it know which branch to insert into
+    //Alex Picard
     public void insertIntoShorterSubtree(E new_data, BinaryTreeNode<E> node){
         if(root == null){
             root = new BinaryTreeNode<>(new_data);
@@ -188,21 +191,20 @@ public class BinaryTree<E> implements Comparator<E> {
         int rightHeight = heightOfSubTree(node.getRight());
 
         if (leftHeight <= rightHeight) {
-        // If left subtree is shorter or equal, go down the left subtree
             insertIntoShorterSubtree(new_data, node.getLeft());
         } else {
-        // If right subtree is shorter, go down the right subtree
             insertIntoShorterSubtree(new_data, node.getRight());
         }
     }
     //Time complexity is O(n) due to the worst case being a nearly complete binary tree and 
     //needs to go through each node in breadth first order
+    //Alex Picard
     public void insertIntoFirstAvailablePosition(E new_data) {
         BinaryTreeNode<E> temp = new BinaryTreeNode<>(new_data);
         SinglyLinkedQueue<BinaryTreeNode<E>> q = new SinglyLinkedQueue<>();
         
         if (root == null) {
-            root = temp; // Set the new node as the root if the tree is empty
+            root = temp;
             return;
         }
     
@@ -212,14 +214,14 @@ public class BinaryTree<E> implements Comparator<E> {
             
             if (current_node.getLeft() == null) {
                 current_node.setLeft(temp);
-                return; // Inserted into the first available position, exit the method
+                return;
             } else {
                 q.enqueue(current_node.getLeft());
             }
             
             if (current_node.getRight() == null) {
                 current_node.setRight(temp);
-                return; // Inserted into the first available position, exit the method
+                return;
             } else {
                 q.enqueue(current_node.getRight());
             }
@@ -227,6 +229,7 @@ public class BinaryTree<E> implements Comparator<E> {
     }
     
     //Time complexity is O(n) as worst case is a unbalanced tree
+    //Alex Picard
     public void deleteByPromotingInorderPredecessor(E data) {
         root = deleteRecursiveByPromotingInorderPredecessor(data, root);
     }
@@ -255,6 +258,7 @@ public class BinaryTree<E> implements Comparator<E> {
         return node;
     }
     //The Time complexity is O(n) as it only needs to traverse the tree once to validate if it is a BST
+    //Alex Picard
     public boolean isBinarySearchTree() {
         return isBinarySearchTree(root, null, null);
     }
@@ -262,14 +266,10 @@ public class BinaryTree<E> implements Comparator<E> {
         if (node == null) {
             return true;
         }
-        // Check if the current node's value is within the specified range
         if ((min != null && compare(min, node.getData()) <= 0) ||
             (max != null && compare(max, node.getData()) >= 0)) {
             return false;
         }
-    
-        // Recursively check left subtree with updated max value
-        // Recursively check right subtree with updated min value
         return isBinarySearchTree(node.getLeft(), min, node.getData()) &&
                isBinarySearchTree(node.getRight(), node.getData(), max);
     }
@@ -285,6 +285,7 @@ public class BinaryTree<E> implements Comparator<E> {
 
     //Time complexity is O(n) due to travirsing the string and the worst case being
     // a linked list
+    //Alex Picard
     @Override
     public String toString(){
         StringBuilder result = new StringBuilder();
